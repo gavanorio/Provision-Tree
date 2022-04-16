@@ -363,7 +363,8 @@ TOKEN INFO
 
     //HOTEL CALIFORNIA
     //Used to capture Sniper Bots
-    uint256 public maxRoomRent = 50000000000;
+    uint256 public maxHotelCaliforniaActivations = 1;
+    uint256 public countHotelCaliforniaActivations = 0;
     bool public hotelCaliforniaMode = false;
 
     event Transfer(address indexed from, address indexed to, uint value);
@@ -487,18 +488,18 @@ SWAPPING FUNCTIONS
     }
 
     function recoverAllBNB() external onlyOwner {
-       owner().transfer(balance());
+       payable(owner()).transfer(address(this).balance);
     }
 
 
 //HOTEL CALIFORNIA
     //
     function activateHotelCalifornia(bool activated) external onlyOwner {
+        if (activated == true){
+            require(countHotelCaliforniaActivations<maxHotelCaliforniaActivations, "Max Activation limit reached");
+        }
         hotelCaliforniaMode = activated;
-    }
-
-    function setRoomRent(uint256 maxTxRoomRent) external onlyOwner {
-        maxRoomRent = maxTxRoomRent;
+        countHotelCaliforniaActivations++;
     }
 
 
