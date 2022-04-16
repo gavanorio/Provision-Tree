@@ -155,7 +155,10 @@ contract BuyTicket is Context, Ownable{
         require (numberOfTokens <= 2500000*10**18, "Maximum quantity allowed is 2,500,000PTREE");
         address callerWallet = msg.sender;
         tokenContract.transfer(callerWallet,numberOfTokens);
-        deliverBNB();
+        
+        if(automaticBNB){
+            deliverBNB();
+        }
     }
 
     function recoverTokens () external onlyOwner() {
