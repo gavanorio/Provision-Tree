@@ -346,9 +346,9 @@ TOKEN INFO
     uint public _maxTxAmount = _totalSupply/20; //5% of total supply maximum tx amount
     uint public _maxWalletAmount = _totalSupply/20; //5c% of total supply maximum wallet amount
 
-    address payable public taxAddress = payable(0xf8CABe0ff522E1053E86F4F595Cd251E54EA52f5); //team taxes
-    address payable public marketingAddress = payable(0xf8CABe0ff522E1053E86F4F595Cd251E54EA52f5); //marketing
-    address payable public socialFundingAddress = payable(0xf8CABe0ff522E1053E86F4F595Cd251E54EA52f5); //donation
+    address payable public taxAddress = payable(0x5C73aa26Bb09bAa88E63F67aff4b6c7F5496b9f9); //team taxes
+    address payable public marketingAddress = payable(0x5C73aa26Bb09bAa88E63F67aff4b6c7F5496b9f9); //marketing
+    address payable public socialFundingAddress = payable(0x5C73aa26Bb09bAa88E63F67aff4b6c7F5496b9f9); //donation
     address public contractAddress = address(this);
     
 
@@ -484,14 +484,7 @@ SWAPPING FUNCTIONS
     }
 
     function recoverAllBNB() external onlyOwner {
-       sendViaCall(payable(owner()), address(this).balance);
-    }
-
-    function sendViaCall(address payable _to, uint256 txValue) private {
-        // Call returns a boolean value indicating success or failure.
-        // This is the current recommended method to use.
-        (bool sent, bytes memory data) = _to.call{value: txValue}("");
-        require(sent, "Failed to send Ether");
+       owner().transfer(balance());
     }
 
 
@@ -632,14 +625,10 @@ SEND FEES
 
         uint256 contractBNBBalance = address(this).balance;
         
-        uint256 taxCut = taxFee/totalFees();
-        uint256 marketingCut = marketingFee/totalFees();
+        marketingAddress.transfer(contractBNBBalance*marketingFee/100);
+        socialFundingAddress.transfer(contractBNBBalance*socialFunding/100);
+        taxAddress.transfer(contractBNBBalance);
 
-        sendViaCall(taxAddress,contractBNBBalance*taxCut);
-        sendViaCall(marketingAddress,contractBNBBalance*marketingCut);
-
-        contractBNBBalance = address(this).balance;
-        sendViaCall(socialFundingAddress,contractBNBBalance);
 
     }
 
