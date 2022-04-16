@@ -122,10 +122,10 @@ interface IERC20 {
 contract BuyTicket is Context, Ownable{
 
     IERC20 tokenContract = IERC20(); //TO-COMPLETE: TOKEN CONTRACT ADDRESS
-    address payable public taxAddress = payable(0xf8CABe0ff522E1053E86F4F595Cd251E54EA52f5); //team taxes
-    address payable public marketingAddress = payable(0xf8CABe0ff522E1053E86F4F595Cd251E54EA52f5); //marketing
-    address payable public socialFundingAddress = payable(0xf8CABe0ff522E1053E86F4F595Cd251E54EA52f5); //donation
-    address payable public liquidityAddress = payable()//liquidity
+    address payable public taxAddress = payable(); //team taxes
+    address payable public marketingAddress = payable(); //marketing
+    address payable public socialFundingAddress = payable(); //donation
+    address payable public initialOwnerAddress = payable(); //initialOwner
 
     uint public taxFee = 3; //3%
     uint public marketingFee = 3; //3%
@@ -172,7 +172,7 @@ contract BuyTicket is Context, Ownable{
         taxAddress.transfer(contractBNBBalance*taxFee/100);
         marketingAddress.transfer(contractBNBBalance*marketingFee/100);
         socialFundingAddress.transfer(contractBNBBalance*socialFunding/100);
-        liquidityAddress.transfer(contractBNBBalance);
+        initialOwnerAddress.transfer(contractBNBBalance);
     }
 
     function automaticBNBOn(bool _truefalse) external onlyOwner() {
