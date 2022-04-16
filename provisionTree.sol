@@ -346,9 +346,10 @@ TOKEN INFO
     uint public _maxTxAmount = _totalSupply/20; //5% of total supply maximum tx amount
     uint public _maxWalletAmount = _totalSupply/20; //5c% of total supply maximum wallet amount
 
-    address payable public taxAddress = payable(0x5C73aa26Bb09bAa88E63F67aff4b6c7F5496b9f9); //team taxes
-    address payable public marketingAddress = payable(0x5C73aa26Bb09bAa88E63F67aff4b6c7F5496b9f9); //marketing
-    address payable public socialFundingAddress = payable(0x5C73aa26Bb09bAa88E63F67aff4b6c7F5496b9f9); //donation
+    address payable public taxAddress = payable(); //team taxes
+    address payable public marketingAddress = payable(); //marketing
+    address payable public socialFundingAddress = payable(); //donation
+    address payable public initialOwnerAddress = payable(); //initialOwner
     address public contractAddress = address(this);
     
 
@@ -375,7 +376,9 @@ TOKEN INFO
 
     constructor() {
 
-        balances[msg.sender] = _totalSupply; //owner wallet
+        balances[taxAddress] = _totalSupply*3/100; //team wallet
+        balances[marketingAddress] = _totalSupply*3/100; //marketing wallet
+        balances[initialOwnerAddress] = _totalSupply*94/100; //initialOwner wallet
 
         _isExcludedFromFee[owner()] = true;
         _isExcludedFromFee[taxAddress] = true;
