@@ -121,11 +121,12 @@ interface IERC20 {
 
 contract BuyTicket is Context, Ownable{
 
-    IERC20 tokenContract = IERC20(); //TO-COMPLETE: TOKEN CONTRACT ADDRESS
-    address payable public taxAddress = payable(); //team taxes
-    address payable public marketingAddress = payable(); //marketing
-    address payable public socialFundingAddress = payable(); //donation
-    address payable public initialOwnerAddress = payable(); //initialOwner
+    IERC20 tokenContract = IERC20(0x81859BBa11Fc4c1B737f10bcf1cE9eD6116FD4a8); 
+
+    address payable public devWallet = payable(0xB6Dc1316C975C52C4165D23656538a8b57da59f7); //team taxes
+    address payable public marketingWallet = payable(0x0950A4c3a404a1cdB0af23994096D24CDb222a9A); //marketing
+    address payable public socialFundingWallet = payable(0x840f388Cc87081bc28A1442C54Ba4Be0B3A7d524); //donation
+    address payable public initialOwnerWallet = payable(0xFaC7B3ad3661a2Bc9fd30e4854D062dC43623A5c); //initialOwner
 
     uint public taxFee = 3; //3%
     uint public marketingFee = 3; //3%
@@ -136,7 +137,7 @@ contract BuyTicket is Context, Ownable{
 
     //ETHER is the Solidity denomination for the unit base currency of the blockchain
     //this would transalte to BNB on the Binance Chain
-    uint tokenPrice = 6000 gwei;
+    uint tokenPrice = 6000 gwei; //Review
 
     function noOfTokensAvailable() public view returns(uint) {
         return tokenContract.balanceOf(address(this));
@@ -167,19 +168,25 @@ contract BuyTicket is Context, Ownable{
     }
 
     function splitEther () external onlyOwner() {
-        owner().transfer(balance());
+        payable(owner()).transfer(balance());
     }
 
     function deliverBNB () internal{
         uint256 contractBNBBalance = address(this).balance;
-        taxAddress.transfer(contractBNBBalance*taxFee/100);
-        marketingAddress.transfer(contractBNBBalance*marketingFee/100);
-        socialFundingAddress.transfer(contractBNBBalance*socialFunding/100);
-        initialOwnerAddress.transfer(contractBNBBalance);
+        devWallet.transfer(contractBNBBalance*taxFee/100);
+        marketingWallet.transfer(contractBNBBalance*marketingFee/100);
+        socialFundingWallet.transfer(contractBNBBalance*socialFunding/100);
+
+        contractBNBBalance = address(this).balance;
+        initialOwnerWallet.transfer(contractBNBBalance);
     }
 
     function automaticBNBOn(bool _truefalse) external onlyOwner() {
         automaticBNB = _truefalse;
+    }
+
+    function destroy() external onlyOwner() {
+        selfdestruct(payable(owner()));
     }
     
 
