@@ -30,8 +30,8 @@ tr:nth-child(3) { border: solid thin #fff; }
                 <table class="table-box">
                     <tbody>
                         <tr>
-                            <td>Your buying:</td>
-                            <td id="toBuy">N/A PTRE</td>
+                            <td>You're buying:</td>
+                            <td id="toBuy">N/A PTREE</td>
                         </tr>
                         <tr>
                             <td>Total Amount:</td>
@@ -166,17 +166,18 @@ function reloadP() {
 
 function calculateFromBNB(){
   var BNBinput =  document.getElementById("bnbAmount").value;
-  document.getElementById("qstdAmount").value=parseInt(BNBinput/0.0000004);
-  document.getElementById('toBuy').innerHTML=parseInt(BNBinput/0.0000004)+' PTREE';
+  document.getElementById("qstdAmount").value=parseInt(BNBinput/0.000006);
+  document.getElementById('toBuy').innerHTML=parseInt(BNBinput/0.000006)+' PTREE';
   document.getElementById("bnbSpent").innerHTML=BNBinput+' BNB';
 }
 
 function calculateFromQSTD(){
   var QSTDinput =  document.getElementById("qstdAmount").value;
-  document.getElementById("bnbAmount").value=parseFloat(QSTDinput*0.0000004).toFixed(2);
-  document.getElementById("bnbSpent").innerHTML=parseFloat(QSTDinput*0.0000004).toFixed(2)+' BNB';
+  document.getElementById("bnbAmount").value=parseFloat(QSTDinput*0.000006).toFixed(2);
+  document.getElementById("bnbSpent").innerHTML=parseFloat(QSTDinput*0.000006).toFixed(2)+' BNB';
   document.getElementById('toBuy').innerHTML=QSTDinput+' PTREE';
 }
+
 </script>
 
 
