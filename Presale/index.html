@@ -95,7 +95,7 @@ async function connect() {
 
 
 	accounts = await ethereum.request({ method: "eth_accounts" });
-  document.getElementById("loginButton").innerHTML = 'Connected to ' + accounts[0];
+  document.getElementById("loginButton").innerHTML = 'Connected to ' + accounts[0].substring(0,4).concat("...").concat(accounts[0].substring(accounts[0].length-3,accounts[0].length));
   
 	console.log(accounts);
 	
