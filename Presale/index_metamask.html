@@ -110,6 +110,7 @@ async function connect() {
 
   contractBuy.noOfTokensAvailable().then((ticketsAvailable) => totalTicketsAvailable.innerHTML = ticketsAvailable/10**18 + ' available to buy');
  
+
   document.getElementById('loginButton').addEventListener("click", function() {
       alert("disconnected");
       document. location. reload();
@@ -122,8 +123,10 @@ async function connect() {
     if(amount>2500000){
       alert('PTREE Amount to buy is too large. Maximum amount is 2,500,000 PTREE');
     }
+    else{
 
-		var etherAmount = amount*60/10000000;
+
+    var etherAmount = amount*60/10000000;
 		var decimalPlaces = 18;
 		var sendAmount = new ethers.utils.parseUnits(etherAmount.toString(), decimalPlaces);
 
@@ -141,6 +144,9 @@ async function connect() {
       alert(error.toString());
  	  	}	
 
+    }
+
+
 		});
 	}
   
@@ -153,8 +159,7 @@ async function connect() {
 }
 
 async function transactionSent(){
-  alert("Transaction sent. Wait a few seconds for the tx to confirm. Remember to import QSTD on Metamask.");
-window.location.href = 'http://qstdpresale.com/wallettoken';
+  alert("Transaction sent. Wait a few seconds for the tx to confirm. Remember to import PTREE on Metamask.");
   reloadP();
 }
 
