@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.7.1/dist/umd/index.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+	<title>Form</title>
+</head>
+<body>
+    <div class="section1">
+        <div class="row">
+            <div class="col-6">
+                <h2 class="title">Buy Provision Tree (PTREE)</h2>
+                <p>You must buy at least <span class="qunty-txt">1 PTREE</span>, Max 2,500,000 PTREE Per Wallet Address.</p><hr style="height:5pt; visibility:hidden;" />
+                <input class="input-box" type="number" name="PTREE" id='bnbAmount' placeholder="0.3 BNB" onkeyup='calculateFromBNB()'/>
+                <p>Enter Quantity. <span class="qunty-txt" id="totalTicketsAvailable">N/A available to buy</span></p>
+                <hr style="height:5pt; visibility:hidden;" />
+                <input class="input-box" type="number" name="PTREE" id='qstdAmount' placeholder="50,000 PTREE" onkeyup='calculateFromQSTD()'/>
+                <br>
+                <hr class="rounded" />
+                
+                <p>You must use BNB (Smart Chain) coins in order to make the purchase of Provision Tree (PTREE).</p>
+                
+                  <style>
+table { border-collapse: collapse; }
+tr:nth-child(1) { border: solid thin #fff; }
+tr:nth-child(2) { border: solid thin #fff; }
+tr:nth-child(3) { border: solid thin #fff; }
+</style>
+                <table class="table-box">
+                    <tbody>
+                        <tr>
+                            <td>You're buying:</td>
+                            <td id="toBuy">N/A PTREE</td>
+                        </tr>
+                        <tr>
+                            <td>Total Amount:</td>
+                            <td id="bnbSpent">N/A BNB</td>
+                        </tr>
+                    </tbody>
+                </table>
+                    <ul class="btn-box">
+                    	<li><a class="link-btn" href="#" id='loginButton' onclick="connectWC()">Connect Wallet</a></li>
+                    	<li><a class="link-btn" href="#" id='buyNow' onclick="buynow()">Buy Now</a></li>
+                    </ul>
+                    
+                  
+            </div>
+        </div>
+    </div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.5.2/ethers.umd.min.js" integrity="sha512-PtOcu3WZTldHT+VjAJdWV5ss+iGebEgc1h5olJuxUNPvKuC0VOZsk1UhNgQYi5oIyrNHhdIOw8WQMdZwBv1MyQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script type="text/javascript">
+  var account;
+
+  // https://docs.walletconnect.com/quick-start/dapps/web3-provider
+  var provider = new WalletConnectProvider.default({
+    rpc: {
+      0x38: "https://speedy-nodes-nyc.moralis.io/f883c68d5cbf978e590c22b4/bsc/mainnet", // https://ethereumnodes.com/
+      // ...
+
+    },
+    // bridge: 'https://bridge.walletconnect.org',
+  });
+
+  var connectWC = async () => {
+    await provider.enable();
+
+    //  Create Web3 instance
+    const web3 = new Web3(provider);
+    window.w3 = web3
+
+    var accounts  = await web3.eth.getAccounts(); // get all connected accounts
+    account = accounts[0];
+    console.log(account);
+    contractBuy = await contract(abi, address);
+    console.log(contractBuy);
+
+
+    //disconnect
+    document.getElementById('loginButton').addEventListener("click", function() {
+      alert("disconnected");
+      disconnect();
+      document. location. reload();
+      });
+
+      
+  //Buttons
+    const loginButton = document.getElementById('loginButton')
+    const buyNow = document.getElementById('buyNow')
+
+    //user Wallet
+    const userWallet = document.getElementById('userWallet')
+
+    //
+    const totalTicketsAvailable = document.getElementById('totalTicketsAvailable')
+    document.getElementById("loginButton").innerHTML = 'Connected to ' + account.substring(0,4).concat("...").concat(account.substring(account.length-3,account.length));
+    
+
+
+    var ticketsAvailable = await contractBuy.methods.noOfTokensAvailable().call();
+    totalTicketsAvailable.innerHTML = ticketsAvailable/10**18 + ' available to buy';
+
+
+
+}
+
+
+async function buynow(){
+    const web3 = new Web3(provider);
+    window.w3 = web3
+      if (w3) {
+        contractBuy = new w3.eth.Contract(abi, address)
+      } else {
+        return false
+      }
+
+
+    contractBuy = new w3.eth.Contract(abi, address);
+    var accounts  = await web3.eth.getAccounts(); // get all connected accounts
+    account = accounts[0];
+    const amount = document.getElementById("qstdAmount").value;
+
+    if(amount>2500000){
+      alert('PTREE Amount to buy is too large. Maximum amount is 2,500,000 PTREE');
+    }
+    else{
+
+    var etherAmount = amount*60/10000000;
+    var decimalPlaces = 18;
+    var sendAmount = new ethers.utils.parseUnits(etherAmount.toString(), decimalPlaces);
+
+
+    console.log('weiValue ->  '+sendAmount);
+
+
+    try {
+        contractBuy.methods.buyTokens(amount).send({from: account,  value: sendAmount});
+
+        await delay(1000);
+        alert("Transaction sent - Check your wallet. Wait a few seconds for the tx to confirm. Remember to import PTREE on your wallet.");
+    } catch (error) {
+      alert(error.toString());
+      }
+
+    }
+
+
+}
+
+function delay(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
+
+ function transactionSent(){
+  alert("Transaction sent. Wait a few seconds for the tx to confirm. Remember to import PTREE on your wallet.");
+  reloadP();
+}
+
+function reloadP() {
+    sessionStorage.setItem("reloading", "true");
+    document.location.reload();
+}
+
+  var sign = async (msg) => {
+    if (w3) {
+      return await w3.eth.personal.sign(msg, account)
+    } else {
+      return false
+    }
+  }
+
+  var contract = async (abi, address) => {
+      if (w3) {
+        return new w3.eth.Contract(abi, address)
+      } else {
+        return false
+      }
+    }
+
+  var disconnect = async () => {
+    // Close provider session
+    await provider.disconnect()
+  }
+
+  var address = "0xc0090Ff924FE51D7725CeEDCAb8eA217d50461FB"; 
+  var abi = [{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"inputs":[],"name":"automaticBNB","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bool","name":"_truefalse","type":"bool"}],"name":"automaticBNBOn","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"balance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"numberOfTokens","type":"uint256"}],"name":"buyTokens","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[],"name":"destroy","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"devWallet","outputs":[{"internalType":"address payable","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"initialOwnerWallet","outputs":[{"internalType":"address payable","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"marketingFee","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"marketingWallet","outputs":[{"internalType":"address payable","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"noOfTokensAvailable","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"recoverTokens","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"socialFunding","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"socialFundingWallet","outputs":[{"internalType":"address payable","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"splitEther","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"taxFee","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"}]
+
+
+  function calculateFromBNB(){
+  var BNBinput =  document.getElementById("bnbAmount").value;
+  document.getElementById("qstdAmount").value=parseInt(BNBinput/0.000006);
+  document.getElementById('toBuy').innerHTML=parseInt(BNBinput/0.000006)+' PTREE';
+  document.getElementById("bnbSpent").innerHTML=BNBinput+' BNB';
+}
+
+function calculateFromQSTD(){
+  var QSTDinput =  document.getElementById("qstdAmount").value;
+  document.getElementById("bnbAmount").value=parseFloat(QSTDinput*0.000006).toFixed(2);
+  document.getElementById("bnbSpent").innerHTML=parseFloat(QSTDinput*0.000006).toFixed(2)+' BNB';
+  document.getElementById('toBuy').innerHTML=QSTDinput+' PTREE';
+}
+
+</script>
+</body>
+
+</html>
