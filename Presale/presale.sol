@@ -137,8 +137,8 @@ contract BuyTicket is Context, Ownable{
 
     //ETHER is the Solidity denomination for the unit base currency of the blockchain
     //this would transalte to BNB on the Binance Chain
-    uint tokenPrice = 6000 gwei; //Review
-
+    uint tokenPrice = 12000 gwei; //Review
+    
     function noOfTokensAvailable() public view returns(uint) {
         return tokenContract.balanceOf(address(this));
     }
