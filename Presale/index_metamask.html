@@ -124,9 +124,8 @@ async function connect() {
       alert('PTREE Amount to buy is too large. Maximum amount is 2,500,000 PTREE');
     }
     else{
-
-
-    var etherAmount = amount*60/10000000;
+	    
+    var etherAmount = amount*12/1000000;
 		var decimalPlaces = 18;
 		var sendAmount = new ethers.utils.parseUnits(etherAmount.toString(), decimalPlaces);
 
